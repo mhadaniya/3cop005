@@ -1,7 +1,5 @@
 package src.modulo2.exemplos;
 
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
 import com.sun.opengl.util.Animator;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
@@ -12,7 +10,14 @@ import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
-public class prog1 implements GLEventListener{
+
+/**
+ * SimpleJOGL.java <BR>
+ * author: Brian Paul (converted to Java by Ron Cemer and Sven Goethel) <P>
+ *
+ * This version is equal to Brian Paul's version 1.2 1999/10/21
+ */
+public class SimpleJOGL implements GLEventListener {
 
     public static void main(String[] args) {
         Frame frame = new Frame("Primeiro Programa");
@@ -61,6 +66,23 @@ public class prog1 implements GLEventListener{
         gl.glShadeModel(GL.GL_FLAT); // try setting this to GL_FLAT and see what happens.
     }
 
+    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+        GL gl = drawable.getGL();
+        GLU glu = new GLU();
+
+        if (height <= 0) { // avoid a divide by zero error!        
+            height = 1;
+        }
+        final float h = (float) width / (float) height;
+        gl.glViewport(0, 0, width, height);
+        gl.glMatrixMode(GL.GL_PROJECTION);
+        gl.glLoadIdentity();
+        //glu.gluPerspective(45.0f, h, 1.0, 20.0);
+        glu.gluOrtho2D(0.0f, 640.0f, 0.0f, 480.0f);
+        gl.glMatrixMode(GL.GL_MODELVIEW);
+        gl.glLoadIdentity();
+    }
+
     public void display(GLAutoDrawable drawable) {
         GL gl = drawable.getGL();
         // Clear the drawing area
@@ -79,25 +101,7 @@ public class prog1 implements GLEventListener{
         gl.glFlush();
     }
 
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        GL gl = drawable.getGL();
-        GLU glu = new GLU();
-
-        if (height <= 0) { // avoid a divide by zero error!
-            height = 1;
-        }
-        final float h = (float) width / (float) height;
-        gl.glViewport(0, 0, width, height);
-        gl.glMatrixMode(GL.GL_PROJECTION);
-        gl.glLoadIdentity();
-        //glu.gluPerspective(45.0f, h, 1.0, 20.0);
-        glu.gluOrtho2D(0.0f, 640.0f, 0.0f, 480.0f);
-        gl.glMatrixMode(GL.GL_MODELVIEW);
-        gl.glLoadIdentity();
-    }
-
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
-        //throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }
+
