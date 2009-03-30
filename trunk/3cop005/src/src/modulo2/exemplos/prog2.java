@@ -59,9 +59,7 @@ public class prog2 implements GLEventListener{
         gl = drawable.getGL();
         glu = new GLU();
         System.err.println("INIT GL IS: " + gl.getClass().getName());
-
-        gl.setSwapInterval(1);
-
+        
         // Setup the drawing area and shading mode
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //Cor de fundo branco
         gl.glColor3f(0.0f, 0.0f, 0.0f); //Cor do desenho
