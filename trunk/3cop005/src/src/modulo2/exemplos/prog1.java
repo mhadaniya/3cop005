@@ -18,7 +18,7 @@ public class prog1 implements GLEventListener{
         Frame frame = new Frame("Primeiro Programa");
         GLCanvas canvas = new GLCanvas();
 
-        canvas.addGLEventListener(new SimpleJOGL());
+        canvas.addGLEventListener(new prog1());
         frame.add(canvas);
         frame.setSize(640, 480);
         final Animator animator = new Animator(canvas);
