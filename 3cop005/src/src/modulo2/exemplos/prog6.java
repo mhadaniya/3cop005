@@ -2,8 +2,6 @@ package src.modulo2.exemplos;
 
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
 import com.sun.opengl.util.Animator;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
@@ -13,23 +11,19 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
-import src.modulo2.exemplos.GLintPoint;
 /**
  *
- * @author uel
+ * @author ADANIYA
  */
-public class prog2 implements GLEventListener{
-    int counter = 0;
-    int screenWidth = 640;	   // width of screen window in pixels
-    int screenHeight = 480;	   // height of screen window in pixels
+public class prog6 implements GLEventListener {
     private GL gl;
     private GLU glu;
 
     public static void main(String[] args) {
-        Frame frame = new Frame("Segundo Programa - Sierpinsk");
+        Frame frame = new Frame("Programa 05");
         GLCanvas canvas = new GLCanvas();
 
-        canvas.addGLEventListener(new prog2());
+        canvas.addGLEventListener(new prog6());
         frame.add(canvas);
         frame.setSize(640, 480);
         final Animator animator = new Animator(canvas);
@@ -54,74 +48,54 @@ public class prog2 implements GLEventListener{
         frame.setVisible(true);
         animator.start();
     }
-    
+
     public void init(GLAutoDrawable drawable) {
         gl = drawable.getGL();
         glu = new GLU();
-        System.err.println("INIT GL IS: " + gl.getClass().getName());
-        
-        // Setup the drawing area and shading mode
-        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //Cor de fundo branco
-        gl.glColor3f(0.0f, 0.0f, 0.0f); //Cor do desenho
-        gl.glPointSize(2.0f); //um ponto eh 4 x 4 pixels
-        gl.glDrawBuffer(GL.GL_BACK);
-        gl.glLoadIdentity();
-        //gl.glShadeModel(GL.GL_FLAT); // try setting this to GL_FLAT and see what happens.
-        glu.gluOrtho2D(0.0f, (float)screenWidth, 0.0f, (float)screenHeight);
 
+        System.err.println("INIT GL IS: " + gl.getClass().getName());
+        // Enable VSync
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);        // set white background color
+        gl.glColor3f(0.0f, 0.0f, 0.0f);          // set the drawing color
+        gl.glPointSize(4.0f);   // a 'dot' is 4 by 4 pixels
+        gl.glLineWidth(2.0f);
+        gl.glMatrixMode(GL.GL_PROJECTION);
+        gl.glLoadIdentity();
+        glu.gluOrtho2D(0.0, 640.0, 0.0, 480.0);
     }
 
     public void display(GLAutoDrawable drawable) {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);     // clear the screen
-        gl.glBegin(GL.GL_POINTS);
-            Sierpinski();
-        gl.glEnd();
-        gl.glFlush();
+        drawFlurry(10, 640, 480);
     }
 
-
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-
     }
 
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
-
     }
 
     //TODO - arrumar o random!!!
     int random(int m)
     {
-     return (int) (Math.random() % m);
+     return (int) (1 + Math.random()%m);
     }
 
-    void drawDot(int x, int y)
+    void drawFlurry(int num, int Width, int Height)
+    // draw num random rectangles in a Width by Height rectangle
     {
-        gl.glVertex2d(x, y);
-    }
-
-    
-    void Sierpinski()
-    {
-        GLintPoint[] T = new GLintPoint[]{
-            new GLintPoint(20, 20),
-            new GLintPoint(300, 30),
-            new GLintPoint(200, 300)};
-        //GLintPoint[] T = new GLintPoint[];
-        //GLintPoint T[3] = new GLintPoint{};
-//        GLintPoint T[3]= {{20,20},{300,30},{200, 300}};
-
-        int index = random(3);         // 0, 1, or 2 equally likely
-        System.out.println("INDEX - " + index);
-        GLintPoint point = T[index]; 	 // initial point
-        drawDot(point.getX(), point.getY());     // draw initial point
-        for (int i = 0; i < 4000; i++) // draw 4000 dots
+        for (int i = 0; i < num; i++)
         {
-            index = random(3);
-            point.setX((point.getX() + T[index].getX()) / 2);
-            point.setY((point.getY() + T[index].getY()) / 2);
-            drawDot(point.getX(), point.getY());
-            gl.glFlush();
+            int x1 = random(Width);			// place corner randomly
+            int y1 = random(Height);
+            int x2 = random(Width); 		// pick the size so it fits
+            int y2 = random(Height);
+            float lev = random(10)/10.0f;		// random value, in range 0 to 1
+            gl.glColor3f(lev,lev,lev);			// set the gray level
+            gl.glRecti(x1, y1, x2, y2);			// draw the rectangle
         }
+        gl.glFlush();
+
     }
 
 }
