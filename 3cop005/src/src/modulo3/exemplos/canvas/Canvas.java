@@ -1,16 +1,23 @@
 package src.modulo3.exemplos.canvas;
 
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.glu.GLU;
 /**
  *
  * @author uel
  */
-public class Canvas {
+public class Canvas implements GLEventListener{
     private Point2 currentPosition; //current position in the world.
     private IntRect viewport;
     private RealRect window;
     private float CD;
 
-    //constructor
+    public Canvas() {
+    }
+
+   //constructor
     Canvas(int width, int height, String windowTitle) {
 //        char*
 //        argv[1]; //dummy argument list for glutinit()
@@ -92,6 +99,29 @@ public class Canvas {
 
     }
 
+    public void init(GLAutoDrawable drawable) {
+        GL gl = drawable.getGL();
+		GLU glu = drawable.getGLU();
+
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+		gl.glLineWidth(2.0f);
+
+		gl.glViewport(-250, -150, 250, 150);
+		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glLoadIdentity();
+		glu.gluOrtho2D(-250.0, 250.0, -150.0, 150.0);
+    }
+
+    public void display(GLAutoDrawable drawable) {
+        drawGraph(drawable.getGL());
+    }
+
+    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {        
+    }
+
+    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {        
+    }
 
     public float getCD() {
         return CD;
