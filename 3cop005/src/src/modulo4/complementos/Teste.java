@@ -13,6 +13,10 @@ public class Teste {
 
     public static void main(String[] args){
         Teste teste = new Teste();
+
+        Matriz matriz = new Matriz();
+
+        matriz.showMatriz();
     }
 
 }

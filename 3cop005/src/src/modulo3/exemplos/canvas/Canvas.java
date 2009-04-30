@@ -9,6 +9,9 @@ import javax.media.opengl.glu.GLU;
  * @author uel
  */
 public class Canvas implements GLEventListener{
+    private GL gl;
+    private GLU glu;
+
     private Point2 currentPosition; //current position in the world.
     private IntRect viewport;
     private RealRect window;
@@ -101,7 +104,7 @@ public class Canvas implements GLEventListener{
 
     public void init(GLAutoDrawable drawable) {
         GL gl = drawable.getGL();
-		GLU glu = drawable.getGLU();
+		GLU glu = new GLU();
 
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
