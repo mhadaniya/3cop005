@@ -101,8 +101,8 @@ public class prog01 implements GLEventListener{
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //Cor de fundo branco
         gl.glViewport(0, 0, 640, 480);
         gl.glColor3f(0.0f, 0.0f, 0.0f); //Cor do desenho
-        gl.glPointSize(4.0f); //um ponto eh 4 x 4 pixels
-        gl.glLineWidth(2.0f);
+        gl.glPointSize(1.0f); //um ponto eh 4 x 4 pixels
+        gl.glLineWidth(1.0f);
         gl.glShadeModel(GL.GL_FLAT); // try setting this to GL_FLAT and see what happens.
     }
 
