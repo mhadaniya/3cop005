@@ -3,7 +3,6 @@ package src.modulo3.exemplos;
 import com.sun.opengl.util.Animator;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
 import src.modulo3.exemplos.canvas.Canvas;
@@ -14,33 +13,37 @@ import src.modulo3.exemplos.canvas.Canvas;
  */
 
 //TODO - arrumar o código de CANVAS.
-public class prog2 extends JFrame {
+public class prog2 implements GLEventListener{
     private GL gl;
     private GLU glu;
+    private Canvas canvas;
 
-    public prog2() {
-        //set the JFrame title
-        super("Modulo 03 - Programa 02");
+     public static void main(String[] args) {
+        Frame frame = new Frame("Modulo 03 - Programa 02");
+        Canvas canvas = new Canvas();
 
-        //kill the process when the JFrame is closed
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        canvas.addGLEventListener(new prog2());
+        frame.add(canvas);
+        frame.setSize(640, 480);
+        final Animator animator = new Animator(canvas);
+        frame.addWindowListener(new WindowAdapter() {
 
-        //only three JOGL lines of code ... and here they are
-        GLCapabilities glcaps = new GLCapabilities();
+            @Override
+            public void windowClosing(WindowEvent e) {
+                
+                new Thread(new Runnable() {
 
-        GLCanvas glcanvas = GLDrawableFactory.getFactory().
-        GLDrawableFactory.getFactory().createGLCanvas(glcaps);
-
-        glcanvas.addGLEventListener(
-           new Canvas()
-        );
-
-        //add the GLCanvas just like we would any Component
-        getContentPane().add(glcanvas, BorderLayout.CENTER);
-        setSize(500, 300);
-
-        //center the JFrame on the screen
-        centerWindow(this);
+                    public void run() {
+                        animator.stop();
+                        System.exit(0);
+                    }
+                }).start();
+            }
+        });
+        // Center frame
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        animator.start();
     }
 
     public void centerWindow(Component frame) {
@@ -71,51 +74,38 @@ public class prog2 extends JFrame {
         gl.glFlush();
     }
 
-    public static void main(String[] args) {
-        final prog2 app = new prog2();
+    public void display(GLAutoDrawable drawable) {
+        canvas.setWindow(-5.0f, 5.0f, -0.3f, 1.0f); // coordenada mundo obs:pode-se inverter os eixos para que a figura fique de cabeça para baixo
+        canvas.setViewport(0, 640, 0, 480);     // Sub Janela de visualização
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 
-        // show what we've done
-        SwingUtilities.invokeLater (
-            new Runnable() {
-                public void run() {
-                    app.setVisible(true);
-                }
-            }
-        );
+        canvas.setViewport(0, 640, 0, 480);
+        gl.glViewport(0, 640, 0, 480);
+        plotsin();
+
+        canvas.setViewport(340, 640, 260, 480);
+        gl.glViewport(340, 640, 260, 480);
+        plotsin();
     }
 
+    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 
-//    class Renderer implements GLEventListener {
-//
-//        public void init(GLAutoDrawable drawable) {
-//            frame = new Frame("Modulo 03 - Programa 02");
-//            canvas = new Canvas();
-//
-//            canvas.addGLEventListener(new Prog2());
-////        canvas.setSize(width, height);
-//            frame.add(canvas);
-//
-//            gl = drawable.getGL();
-//            glu = new GLU();
-//
-////        setBackgroundColor(1.0, 1.0, 1.0);
-////        canvas.setColor(0.0, 0.0, 0.0);
-//            gl.glPointSize(4.0f);                 // a 'dot' is 4 by 4 pixels
-//            gl.glLineWidth(2.0f);
-//        }
-//
-//        public void display(GLAutoDrawable drawable) {
-////        setWindow(-5.0, 5.0, -0.3, 1.0); // coordenada mundo obs:pode-se inverter os eixos para que a figura fique de cabeça para baixo
-////        setViewport(0, 640, 0, 480);     // Sub Janela de visualização
-//            gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-//
-////        canvas.setViewport(0, 640, 0, 480);
-//            plotsin();
-//
-////        canvas.setViewport(340, 640, 260, 480);
-//            plotsin();
-//        }
-//
-//    }
+    }
+
+    public void init(GLAutoDrawable drawable) {
+        canvas = new Canvas(480, 640, "Programa Teste", drawable);
+        gl = drawable.getGL();
+        glu = new GLU();
+
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);        // set white background color
+        gl.glColor3f(0.0f, 0.0f, 0.0f);          // set the drawing color
+        gl.glPointSize(4.0f);                 // a 'dot' is 4 by 4 pixels
+        gl.glLineWidth(2.0f);
+    }
+
+    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+
+    }
+    
 
 }

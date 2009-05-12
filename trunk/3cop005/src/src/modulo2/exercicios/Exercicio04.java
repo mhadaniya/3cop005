@@ -23,6 +23,9 @@ public class Exercicio04 implements GLEventListener, MouseListener, MouseMotionL
     private int prevMouseX, prevMouseY;
     private float diffX, diffY;
     private boolean mouseRButtonDown = false;
+
+    private boolean flg_criarVertice = false;
+    private int ultimoPonto;
     
     public static void main(String[] args) {
         Frame frame = new Frame("Exercicio 04 - Mouse e Teclado");
@@ -61,6 +64,7 @@ public class Exercicio04 implements GLEventListener, MouseListener, MouseMotionL
 
         listaVertices = new GLintPoint[]{};
         indiceLista = 0;
+        ultimoPonto = 0;
 
         //Informacoes da placa gráfica
         System.err.println("INIT GL IS: " + gl.getClass().getName());
@@ -124,10 +128,24 @@ public class Exercicio04 implements GLEventListener, MouseListener, MouseMotionL
                 gl.glVertex2i(listaVertices[i].getX(), listaVertices[i].getY());
             }
             gl.glEnd();
-        }            
-        
+        }                   
         // Flush all drawing operations to the graphics card
         gl.glFlush();
+    }
+
+    public void desenharPontos(){
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT); // clear the screen
+        gl.glBegin(GL.GL_POINTS);
+        for (int i = 0; i <= ultimoPonto; i++) {
+                gl.glVertex2i(listaVertices[i].getX(), listaVertices[i].getY());
+        }
+        gl.glEnd();
+        gl.glFlush();
+    }
+
+    public void desenharLinhas(){
+        gl.glBegin(GL.GL_LINE_STRIP);        
+        gl.glEnd();
     }
 
     /**
@@ -139,7 +157,7 @@ public class Exercicio04 implements GLEventListener, MouseListener, MouseMotionL
         listaVertices = new GLintPoint[]{};
     }
 
-    public void criaNovoVertice(int x, int y){
+    public void criaNovoPonto(int x, int y){
         GLintPoint[] listaAntiga = listaVertices;
         if(listaVertices.length > 0){
             listaVertices = new GLintPoint[listaAntiga.length + 1];
@@ -153,10 +171,29 @@ public class Exercicio04 implements GLEventListener, MouseListener, MouseMotionL
         }
     }
 
+    public void ligarVertices(){
+        if(listaVertices.length >= 2){
+            gl.glBegin(GL.GL_LINE_STRIP);
+
+            for (int i = 0; i < listaVertices.length; i++) {
+                gl.glVertex2i(listaVertices[i].getX(), listaVertices[i].getY());
+            }
+
+            gl.glEnd();
+        }
+    }
+
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
     }
 
     public void mouseClicked(MouseEvent e) {
+        if(flg_criarVertice){
+            System.out.println("Criar vertice");
+            criaNovoPonto(prevMouseX, prevMouseY);
+            ultimoPonto++;
+        }
+
+//        ligarVertices();
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -216,8 +253,11 @@ public class Exercicio04 implements GLEventListener, MouseListener, MouseMotionL
                 break;
 
             case 67: //C - cria um novo vertice
-                System.out.println("Criar vertice");
-                criaNovoVertice(prevMouseX, prevMouseY);
+                if(flg_criarVertice){
+                    flg_criarVertice = false;
+                }else{
+                    flg_criarVertice = true;
+                }
                 break;
 
             case 65: //A
