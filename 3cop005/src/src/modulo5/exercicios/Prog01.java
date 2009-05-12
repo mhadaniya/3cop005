@@ -1,4 +1,4 @@
-package src.modulo5.exemplos;
+package src.modulo5.exercicios;
 
 import com.sun.opengl.util.Animator;
 import com.sun.opengl.util.GLUT;
@@ -11,7 +11,7 @@ import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
-public class prog01 implements GLEventListener{
+public class Prog01 implements GLEventListener{
     private GL gl;
     private GLU glu;
     private GLUT glut;
@@ -20,7 +20,7 @@ public class prog01 implements GLEventListener{
         Frame frame = new Frame("Modulo 05 - Programa 01");
         GLCanvas canvas = new GLCanvas();
 
-        canvas.addGLEventListener(new prog01());
+        canvas.addGLEventListener(new Prog01());
         frame.add(canvas);
         frame.setSize(640, 480);
         final Animator animator = new Animator(canvas);
@@ -46,16 +46,7 @@ public class prog01 implements GLEventListener{
         animator.start();
     }
 
-    //<<<<<<<<<<<<<<<<<<< axis >>>>>>>>>>>>>>
-    public void axis(double length){ // draw a z-axis, with cone at end
-        gl.glPushMatrix();
-        gl.glBegin(GL.GL_LINES);
-           gl.glVertex3d(0, 0, 0); gl.glVertex3d(0,0,length); // along the z-axis
-        gl.glEnd();
-        gl.glTranslated(0, 0,length -0.2);
-        glut.glutWireCone(0.04, 0.2, 12, 9);
-        gl.glPopMatrix();
-    }
+
 
     public void displayWire(){
 	gl.glMatrixMode(GL.GL_PROJECTION); // set the view volume shape
@@ -89,7 +80,7 @@ public class prog01 implements GLEventListener{
         gl = drawable.getGL();
         glu = new GLU();
         glut = new GLUT();
-        
+
         System.err.println("INIT GL IS: " + gl.getClass().getName());
 
         // Enable VSync

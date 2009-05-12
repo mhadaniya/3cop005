@@ -1,16 +1,18 @@
 package src.modulo3.exemplos.canvas;
 
+import com.sun.opengl.util.GLUT;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLCanvas;
 import javax.media.opengl.glu.GLU;
 /**
  *
  * @author uel
  */
-public class Canvas implements GLEventListener{
+public class Canvas extends GLCanvas{
     private GL gl;
     private GLU glu;
+    private GLUT glut;
 
     private Point2 currentPosition; //current position in the world.
     private IntRect viewport;
@@ -21,18 +23,11 @@ public class Canvas implements GLEventListener{
     }
 
    //constructor
-    Canvas(int width, int height, String windowTitle) {
-//        char*
-//        argv[1]; //dummy argument list for glutinit()
-//        char dummyString[8];
-//        argv[0] = dummyString; //hook up the pointer
-//        int argc = 1;
-//
-//        glutInit(&  argc, argv);
-//        glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-//        glutInitWindowSize(width, height);
-//        glutInitWindowPosition(20, 20);
-//        glutCreateWindow(windowTitle);
+    public Canvas(int width, int height, String windowTitle, GLAutoDrawable drawable) {
+        gl = drawable.getGL();
+        glu = new GLU();
+        glut = new GLUT();
+
 //        setWindow(0, (float) width, 0, (float) height); // default world window
 //        setViewport(0, width, 0, height); //default viewport
 //        CP.set(0.0f, 0.0f); //initialize the cp to (0,0)
@@ -51,41 +46,52 @@ public class Canvas implements GLEventListener{
     }
 
     void lineTo(Point2 p) {
-//      glBegin(GL_LINES);
-//      glVertex2f((GLfloat) CP.getX(), (GLfloat) CP.getY());
-//      glVertex2f((GLfloat) p.getX(), (GLfloat) p.getY());
-//      glEnd();
-//      currentPosition.setPoint2(p.getX(), p.getY());
-//      glFlush();
+      gl.glBegin(GL.GL_LINES);
+          gl.glVertex2f(currentPosition.getX(), currentPosition.getY());
+          gl.glVertex2f(p.getX(), p.getY());
+      gl.glEnd();
+      currentPosition.setPoint2(p.getX(), p.getY());
+      gl.glFlush();
+    }
+
+    void lineTo(float x, float y) {
+      gl.glBegin(GL.GL_LINES);
+          gl.glVertex2f(currentPosition.getX(), currentPosition.getY());
+          gl.glVertex2f(x, y);
+      gl.glEnd();
+      currentPosition.setPoint2(x, y);
+      gl.glFlush();
     }
 
     public void setWindow(float left, float right, float bottom, float top){
-//        glMatrixMode(GL_PROJECTION);
-//        glLoadIdentity();
-//        gluOrtho2D(left, right, bottom, top);
+        gl.glMatrixMode(GL.GL_PROJECTION);
+        gl.glLoadIdentity();
+        glu.gluOrtho2D(left, right, bottom, top);
     }
 
     public void setViewport(int left, int right, int bottom, int top){
-//        glViewport(left, bottom, right - left, top - bottom);
+        gl.glViewport(left, bottom, right - left, top - bottom);
     }
 
     public void setBackgroundColor(float red, float green, float blue) {
-//        glClearColor(red, green, blue, 0.0);
+        gl.glClearColor(red, green, blue, 0.0f);
     }
 
     public void setColor(float red, float green, float blue) {
-//            glColor3f(red, green, blue);
+            gl.glColor3f(red, green, blue);
 }
 
-    public void forward(float dist, int isVisible) {
-  //  const float RadPerDeg = 0.017453393;          //radians per degree
-//      float RadPerDeg = PI / 180; //radians per degree
-//      float x = currentPosition.getX() + dist * Math.cos(RadPerDeg * CD);
-//      float y = currentPosition.getY() + dist * Math.sin(RadPerDeg * CD);
-//      if (isVisible)
-//        lineTo(x, y);
-//      else
-//        moveTo(x, y);
+    public void forward(float dist, boolean isVisible) {
+//        float RadPerDeg = 0.017453393f;          //radians per degree
+        float RadPerDeg = (float) Math.PI/180; //radians per degree
+        float x = (float) (currentPosition.getX() + dist * Math.cos(RadPerDeg * CD));
+        float y = (float) (currentPosition.getY() + dist * Math.sin(RadPerDeg * CD));
+    
+        if (isVisible) {
+            lineTo(x, y);
+        } else {
+            moveTo(x, y);
+        }
     }//forward
 
     public void turnTo(float angle) {
@@ -103,8 +109,8 @@ public class Canvas implements GLEventListener{
     }
 
     public void init(GLAutoDrawable drawable) {
-        GL gl = drawable.getGL();
-		GLU glu = new GLU();
+        gl = drawable.getGL();
+		glu = new GLU();
 
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -114,16 +120,6 @@ public class Canvas implements GLEventListener{
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
 		glu.gluOrtho2D(-250.0, 250.0, -150.0, 150.0);
-    }
-
-    public void display(GLAutoDrawable drawable) {
-        drawGraph(drawable.getGL());
-    }
-
-    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {        
-    }
-
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {        
     }
 
     public float getCD() {

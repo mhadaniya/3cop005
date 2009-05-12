@@ -1,7 +1,5 @@
 package src.modulo2.exemplos;
 
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
 import com.sun.opengl.util.Animator;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
