@@ -21,7 +21,7 @@ public class Renderer extends KeyAdapter implements GLEventListener{
     private Olho olho;
     private Visada visada;
     private U u;
-
+    private double visualizacao;
 
     /**
 	 * Método definido na interface GLEventListener e chamado pelo objeto no qual será feito o desenho
@@ -32,6 +32,7 @@ public class Renderer extends KeyAdapter implements GLEventListener{
         gl = drawable.getGL();
         glu = new GLU();
         glut = new GLUT();
+        visualizacao = 1.0;
 
         olho = new Olho(2.0, 2.0, 2.0);
         visada = new Visada(0.0, 1.0, 0.0);
@@ -58,12 +59,11 @@ public class Renderer extends KeyAdapter implements GLEventListener{
     public void display(GLAutoDrawable drawable) {
         gl.glMatrixMode(GL.GL_PROJECTION); // set the view volume shape
         gl.glLoadIdentity();
-        gl.glOrtho(-2.0 * 64 / 48.0, 2.0 * 64 / 48.0, -2.0, 2.0, 0.1, 100);
+        gl.glOrtho((-2.0 * 64 / 48.0) * visualizacao, (2.0 * 64 / 48.0)* visualizacao, (-2.0) * visualizacao, (2.0) * visualizacao, 0.1, 100);
         gl.glMatrixMode(GL.GL_MODELVIEW); // position and aim the camera
         gl.glLoadIdentity();
 
         displayWire();
-
 
     }
 
@@ -100,10 +100,10 @@ public class Renderer extends KeyAdapter implements GLEventListener{
             case KeyEvent.VK_V :
                 if(e.isShiftDown()){
                     System.out.println("V - aumenta a area de visualização");
-                    u.setX(u.getX() - 0.2);
+                    visualizacao = visualizacao - 0.1;
                 }else{
                     System.out.println("v - aumenta a area de visualização");
-                    u.setX(u.getX() + 0.2);
+                    visualizacao = visualizacao + 0.1;
                 }
                 break;
 
@@ -172,6 +172,7 @@ public class Renderer extends KeyAdapter implements GLEventListener{
                 olho = new Olho(2.0, 2.0, 2.0);
                 visada = new Visada(0.0, 1.0, 0.0);
                 u = new U(0.0, 1.0, 0.0);
+                visualizacao = 1.0;
                 break;
 
             case KeyEvent.VK_ESCAPE:

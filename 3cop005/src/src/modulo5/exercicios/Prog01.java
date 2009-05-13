@@ -46,7 +46,15 @@ public class Prog01 implements GLEventListener{
         animator.start();
     }
 
-
+public void axis(double length){ // draw a z-axis, with cone at end
+        gl.glPushMatrix();
+        gl.glBegin(GL.GL_LINES);
+           gl.glVertex3d(0, 0, 0); gl.glVertex3d(0,0,length); // along the z-axis
+        gl.glEnd();
+        gl.glTranslated(0, 0 ,length -0.2);
+        glut.glutWireCone(0.04, 0.2, 12, 9);
+        gl.glPopMatrix();
+    }
 
     public void displayWire(){
 	gl.glMatrixMode(GL.GL_PROJECTION); // set the view volume shape
