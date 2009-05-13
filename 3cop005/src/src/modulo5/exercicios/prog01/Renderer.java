@@ -28,6 +28,7 @@ public class Renderer extends KeyAdapter implements GLEventListener{
 	 * logo após a inicialização do contexto OpenGL.
 	 */
     public void init(GLAutoDrawable drawable) {
+        glDrawable = drawable;
         gl = drawable.getGL();
         glu = new GLU();
         glut = new GLUT();
@@ -55,7 +56,15 @@ public class Renderer extends KeyAdapter implements GLEventListener{
 	 * para começar a fazer o desenho OpenGL pelo cliente.
 	 */
     public void display(GLAutoDrawable drawable) {
+        gl.glMatrixMode(GL.GL_PROJECTION); // set the view volume shape
+        gl.glLoadIdentity();
+        gl.glOrtho(-2.0 * 64 / 48.0, 2.0 * 64 / 48.0, -2.0, 2.0, 0.1, 100);
+        gl.glMatrixMode(GL.GL_MODELVIEW); // position and aim the camera
+        gl.glLoadIdentity();
+
         displayWire();
+
+
     }
 
     /**
@@ -89,34 +98,88 @@ public class Renderer extends KeyAdapter implements GLEventListener{
                 break;
 
             case KeyEvent.VK_V :
-                System.out.println("v");
+                if(e.isShiftDown()){
+                    System.out.println("V - aumenta a area de visualização");
+                    u.setX(u.getX() - 0.2);
+                }else{
+                    System.out.println("v - aumenta a area de visualização");
+                    u.setX(u.getX() + 0.2);
+                }
                 break;
 
             case KeyEvent.VK_X:
-                System.out.println("x - translada x +0.2");
-                glu.gluLookAt(0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+                if(e.isShiftDown()){
+                    System.out.println("x - translada a posição do olho no eixo x -0.2");
+                    olho.setX(olho.getX() - 0.2);
+                }else{
+                    System.out.println("X - translada a posição do olho no eixo x +0.2");
+                    olho.setX(olho.getX() + 0.2);
+                }
                 break;
 
-			case KeyEvent.VK_RIGHT:
-                translacaoX+=0.1;
+            case KeyEvent.VK_Y:
+                if(e.isShiftDown()){
+                    System.out.println("y - translada a posição do olho no eixo y -0.2");
+                olho.setY(olho.getY() - 0.2);
+                }else{
+                    System.out.println("Y - translada a posição do olho no eixo y +0.2");
+                    olho.setY(olho.getY() + 0.2);
+                }
                 break;
 
-            case KeyEvent.VK_LEFT:
-                translacaoX -= 0.1;
+            case KeyEvent.VK_Z:
+                if(e.isShiftDown()){
+                    System.out.println("z - translada a posição do olho no eixo z -0.2");
+                    olho.setZ(olho.getZ() - 0.2);
+                }else{
+                    System.out.println("Z - translada a posição do olho no eixo z +0.2");
+                    olho.setZ(olho.getZ() + 0.2);
+                }
                 break;
 
-            case KeyEvent.VK_UP:
-                translacaoY += 0.1;
+            case KeyEvent.VK_A:
+                if(e.isShiftDown()){
+                    System.out.println("a - translada a posição da visada no eixo x -0.2");
+                    visada.setX(visada.getX() - 0.2);
+                }else{
+                    System.out.println("A - translada a posição da visada no eixo x +0.2");
+                    visada.setX(visada.getX() + 0.2);
+                }
                 break;
 
-            case KeyEvent.VK_DOWN:
-                translacaoY -= 0.1;
+            case KeyEvent.VK_W:
+                if(e.isShiftDown()){
+                    System.out.println("w - translada a posição da visada no eixo y -0.2");
+                    visada.setY(visada.getY() - 0.2);
+                }else{
+                    System.out.println("W - translada a posição da visada no eixo y +0.2");
+                    visada.setY(visada.getY() + 0.2);
+                }
+                break;
+
+            case KeyEvent.VK_S:
+                if(e.isShiftDown()){
+                    System.out.println("s - translada a posição da visada no eixo z +0.2");
+                    visada.setZ(visada.getZ() - 0.2);
+                }else{
+                    System.out.println("S - translada a posição da visada no eixo z +0.2");
+                    visada.setZ(visada.getZ() + 0.2);
+                }
+                break;
+
+            case KeyEvent.VK_R:
+                System.out.println("r - RESET");
+                olho = new Olho(2.0, 2.0, 2.0);
+                visada = new Visada(0.0, 1.0, 0.0);
+                u = new U(0.0, 1.0, 0.0);
                 break;
 
             case KeyEvent.VK_ESCAPE:
                 System.exit(0);
                 break;
+
 		}
+        glDrawable.display();
 		
 	}
 
@@ -131,12 +194,7 @@ public class Renderer extends KeyAdapter implements GLEventListener{
         gl.glPopMatrix();
     }
 
-    public void displayWire() {
-        gl.glMatrixMode(GL.GL_PROJECTION); // set the view volume shape
-        gl.glLoadIdentity();
-        gl.glOrtho(-2.0 * 64 / 48.0, 2.0 * 64 / 48.0, -2.0, 2.0, 0.1, 100);
-        gl.glMatrixMode(GL.GL_MODELVIEW); // position and aim the camera
-        gl.glLoadIdentity();
+    public void displayWire() {        
         glu.gluLookAt(olho.getX(), olho.getY(), olho.getZ(), visada.getX(), visada.getY(), visada.getZ(), u.getX(), u.getY(), u.getZ());
 
         gl.glClear(GL.GL_COLOR_BUFFER_BIT); // clear the screen

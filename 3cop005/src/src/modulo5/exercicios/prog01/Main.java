@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package src.modulo5.exercicios.prog01;
 
 import javax.swing.*;
@@ -16,7 +11,7 @@ public class Main {
 
     public Main() {
         // Cria janela
-		JFrame janela = new JFrame("Casinha");
+		JFrame janela = new JFrame("Modulo05 - Programa01");
 		janela.setBounds(50,100,500,500);
 		janela.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
