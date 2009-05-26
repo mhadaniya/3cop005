@@ -5,14 +5,14 @@ package src.modulo4.complementos;
  * @author uel
  */
 public class Vector3 {
-    private double x;
-    private double y;
-    private double z;
+    private float x;
+    private float y;
+    private float z;
 
     public Vector3() {
     }
 
-    public Vector3(double x, double y, double z) {
+    public Vector3(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -22,7 +22,7 @@ public class Vector3 {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(float x) {
         this.x = x;
     }
 
@@ -30,7 +30,7 @@ public class Vector3 {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(float y) {
         this.y = y;
     }
 
@@ -38,7 +38,7 @@ public class Vector3 {
         return z;
     }
 
-    public void setZ(double z) {
+    public void setZ(float z) {
         this.z = z;
     }
 
