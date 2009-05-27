@@ -14,6 +14,7 @@ public class Main {
 		JFrame janela = new JFrame("Modulo06 - Exercicio02");
 		janela.setBounds(0,0,800,600);
 		janela.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        janela.setLocationRelativeTo(null);
 
 		BorderLayout layout = new BorderLayout();
 		Container caixa=janela.getContentPane();

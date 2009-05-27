@@ -10,7 +10,7 @@ import src.modulo6.complementos.Vector3;
  *
  * @author uel
  */
-public class Camera {
+public class Camera{
     private GL gl;
     private GLU glu;
     private GLUT glut;
@@ -53,7 +53,7 @@ public class Camera {
           0.0f, 0.0f, 0.0f, 1.0f };
 
         gl.glMatrixMode(GL.GL_MODELVIEW);
-        gl.glLoadMatrixf(m, 0);
+        gl.glLoadMatrixf(m, 1);
     };
 
 
@@ -98,14 +98,14 @@ public class Camera {
 
     public void set(Point3 Eye, Point3 look, Vector3 up){
         // make u, v, n vectors
-        eye.setPoint3(Eye);
-        n.setVector(eye.getX() - look.getX(), eye.getY() - look.getY(),eye.getZ() - look.getZ());
-        u.setVector(up.cross(n));
-        v.setVector(n.cross(u));
-        u.normalize(); 
-        v.normalize();
-        n.normalize();
-        setModelViewMatrix();
+        eye.setPoint3(Eye);  // store the given eye position
+        n.setVector(eye.getX() - look.getX(), eye.getY() - look.getY(),eye.getZ() - look.getZ()); // make n
+        u.setVector(up.cross(n).getX(), up.cross(n).getY(), up.cross(n).getZ());  // make u = up X n
+        n.normalize(); // make them unit length
+        u.normalize();
+        v.setVector(n.cross(u).getX(), n.cross(u).getY(), n.cross(u).getZ());  // make v =  n X u
+        
+        setModelViewMatrix();  // tell OpenGL 
     };
 
     public void setShape(float vAngle, float asp, float nr, float fr) {
@@ -123,10 +123,6 @@ public class Camera {
         aspect = asp;
     };
 
-    public void getShape(float viewAngle, float aspect,  float Near,  float Far){
-
-    };
-
     public void rotAxes(Vector3 a, Vector3 b, float angle) {
         // rotate orthogonal vectors a (like x axis) and b(like y axia) through angle degrees
         float ang = (float) (3.14159265 / 180 * angle);
@@ -135,10 +131,6 @@ public class Camera {
         Vector3 t = new Vector3(C * a.getX() + S * b.getX(), C * a.getY() + S * b.getY(), C * a.getZ() + S * b.getZ());
         b.setVector(-S * a.getX() + C * b.getX(), -S * a.getY() + C * b.getY(), -S * a.getZ() + C * b.getZ());
         a.setVector(t.getX(), t.getY(), t.getZ()); // put tmp into a'
-    };
-
-    public void setDefaultCamera(){
-
     };
 
 }
