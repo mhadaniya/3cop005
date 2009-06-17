@@ -91,9 +91,9 @@ class Imaging {
       // Load image and get height and width for raster.
       //
       if( filename == null ) {
-	filename = new String( defaultImageFilename ); }
-      Image img = Toolkit.getDefaultToolkit().
-	createImage( filename );
+        filename = new String( defaultImageFilename );
+      }
+      Image img = Toolkit.getDefaultToolkit().createImage( filename );
       MediaTracker tracker = new MediaTracker(new Canvas());
       tracker.addImage ( img, 0 );
       try {
@@ -112,24 +112,17 @@ class Imaging {
       // Create a raster with correct size,
       // and a colorModel and finally a bufImg.
       //
-      WritableRaster raster =
-	Raster.createInterleavedRaster( DataBuffer.TYPE_BYTE,
-					imgWidth,
-					imgHeight,
-					4,
-					null );
-      ComponentColorModel colorModel =
-	new ComponentColorModel( ColorSpace.getInstance(ColorSpace.CS_sRGB),
-				 new int[] {8,8,8,8},
-				 true,
-				 false,
-				 ComponentColorModel.TRANSLUCENT,
-				 DataBuffer.TYPE_BYTE );
-      BufferedImage bufImg =
-	new BufferedImage (colorModel, // color model
-			   raster,
-			   false, // isRasterPremultiplied
-			   null); // properties
+      WritableRaster raster = Raster.createInterleavedRaster( DataBuffer.TYPE_BYTE, imgWidth, imgHeight,4, null );
+      ComponentColorModel colorModel =	new ComponentColorModel( ColorSpace.getInstance(ColorSpace.CS_sRGB),
+                                                                 new int[] {8,8,8,8},
+                                                                 true,
+                                                                 false,
+                                                                 ComponentColorModel.TRANSLUCENT,
+                                                                 DataBuffer.TYPE_BYTE );
+      BufferedImage bufImg = new BufferedImage (colorModel, // color model
+                                                   raster,
+                                                   false, // isRasterPremultiplied
+                                                   null); // properties
 
       // Filter img into bufImg and perform
       // Coordinate Transformations on the way.
@@ -142,8 +135,7 @@ class Imaging {
       g.drawImage ( img, null, null );
       // Retrieve underlying byte array (imgBuf)
       // from bufImg.
-      DataBufferByte imgBuf =
-	(DataBufferByte)raster.getDataBuffer();
+      DataBufferByte imgBuf = (DataBufferByte)raster.getDataBuffer();
       imgRGBA = imgBuf.getData();
       g.dispose();
     }

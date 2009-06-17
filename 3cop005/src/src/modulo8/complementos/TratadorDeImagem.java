@@ -2,7 +2,12 @@ package src.modulo8.complementos;
 
 import com.sun.opengl.util.BufferUtil;
 import java.awt.Color;
-import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.color.ColorSpace;
+import java.awt.geom.AffineTransform;
+import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -17,55 +22,72 @@ public class TratadorDeImagem {
     private static final int rgb = 3;
     private BufferedImage imagem;
     private int width;
-    private int height;
-    private int[] pixels;
+    private int height;    
     private ByteBuffer checkImageBuf;// =
-  //BufferUtil.newByteBuffer(height * width * rgb);
+    byte[] dukeRGBA;
+    DataBufferByte dukeBuf;
+    Image img;
 
-    public TratadorDeImagem(String caminhoArquivo) throws IOException{
-        this.imagem = ImageIO.read(new File(caminhoArquivo));
-        this.width = imagem.getWidth();
-        this.height = imagem.getHeight();
-        this.pixels = imagem.getRGB(0, 0, width, height, null, 0, width);
-
-        checkImageBuf =
-  BufferUtil.newByteBuffer(height * width * rgb);
-
-        byte c = (byte) 0xFF;
-        Random r = new Random();
-
-        for (int col = 0; col < width; col++) {
-          for (int lin = 0; lin < height; lin++) {
-            pixels[width * lin + col] =
-              new Color(r.nextInt(255), col % 255, lin % 255).getRGB();
-
-            c = (byte)( ( ((byte)((col & 0x8)==0?0x00:0xff)//
-            ^(byte)((lin & 0x8)==0?0x00:0xff))));
-        // checkImage[i][j][0] = (byte) c;
-        // checkImage[i][j][1] = (byte) c;
-        // checkImage[i][j][2] = (byte) c;
-        checkImageBuf.put((byte) c);
-        checkImageBuf.put((byte) c);
-        checkImageBuf.put((byte) c);
-
-          }
+    public TratadorDeImagem(String caminhoArquivo) throws IOException {
+        try {
+            this.imagem = ImageIO.read(new File(caminhoArquivo));
+            img = Toolkit.getDefaultToolkit().createImage(caminhoArquivo);    
+        } catch (Exception e) {
+            System.err.println("#Erro : " + e.toString());
         }
 
-        checkImageBuf.rewind();
-        imagem.setRGB(0, 0, width, height, pixels, 0, width);
-        ImageIO.write(imagem, "PNG", new File("arteabstrata.png"));
+
+        this.width = imagem.getWidth();
+        this.height = imagem.getHeight();
+        System.out.println("W: " + width + "x H: " + height);
+        // Create a raster with correct size,
+        // and a colorModel and finally a bufImg.
+
+        WritableRaster raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, width, height, 4, null);
+        ComponentColorModel colorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB),
+                new int[]{8, 8, 8, 8},
+                true,
+                false,
+                ComponentColorModel.TRANSLUCENT,
+                DataBuffer.TYPE_BYTE);
+
+        BufferedImage bufImg = new BufferedImage(colorModel, // color model
+                raster,
+                false, // isRasterPremultiplied
+                null); // properties
+
+        // Filter img into bufImg and perform
+        // Coordinate Transformations on the way.
+        //
+        Graphics2D g = bufImg.createGraphics();
+        AffineTransform gt = new AffineTransform();
+        gt.translate(0, height);
+        gt.scale(1, -1d);
+        g.transform(gt);
+        g.drawImage(img, null, null);
+
+        dukeBuf = (DataBufferByte) raster.getDataBuffer();
+        dukeRGBA = dukeBuf.getData();
+        checkImageBuf.wrap(dukeRGBA);
+
     }
 
-    
-
-    public int[] getPixels() {
-        return pixels;
+    public DataBufferByte getDukeBuf() {
+        return dukeBuf;
     }
 
-    public void setPixels(int[] pixels) {
-        this.pixels = pixels;
+    public void setDukeBuf(DataBufferByte dukeBuf) {
+        this.dukeBuf = dukeBuf;
     }
 
+    public byte[] getDukeRGBA() {
+        return dukeRGBA;
+    }
+
+    public void setDukeRGBA(byte[] dukeRGBA) {
+        this.dukeRGBA = dukeRGBA;
+    }
+            
     public ByteBuffer getCheckImageBuf() {
         return checkImageBuf;
     }
